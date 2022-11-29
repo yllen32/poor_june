@@ -4,9 +4,8 @@ from sqlalchemy import Column, Integer, String, create_engine, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from hh_parser import BASE_DIR
 
-engine = create_engine(f'sqlite:///../vacancy_storage.db', echo=True)
+engine = create_engine('sqlite:///../vacancy_storage.db', echo=True)
 Base = declarative_base()
 
 
@@ -18,7 +17,6 @@ class Vacancy(Base):
     description = Column(String)
     reading_date = Column(Date, default=date.today)
     
-
     def __init__(self, url, description):
         self.url = url
         self.description = description
@@ -26,7 +24,7 @@ class Vacancy(Base):
 
 def add_vacancys(items):
     """Функция записи прочитанных вакансий в бд.
-    
+
     Функция вернет лист со свежими вакансиями, либо None если при чтении hh.ru
     новых вакансий не обнаружено."""
     session = sessionmaker(bind=engine)()
@@ -35,17 +33,20 @@ def add_vacancys(items):
     for item in items:
         url = item['link']
         if url in old_data:
-            continue #  если урл уже в бд, то пропускаем его
+            continue  # если урл уже в бд, то пропускаем его
         description = item["description"]
         new_data.append(Vacancy(url, description))
     if new_data:
         session.add_all(new_data)
         session.commit()
+        # заберем данные из обьекта Vacancy перед закрытием сессии
+        messages = [(vac.url, vac.description) for vac in new_data]
         session.close()
-        return new_data
+        return messages
     session.close()
     return None
 
 
 if __name__ == '__main__':
-    Base.metadata.create_all(engine) # создаем бд (sqlite) если она не существует
+    # создаем бд (sqlite) если она не существует
+    Base.metadata.create_all(engine)

@@ -3,14 +3,13 @@ from __future__ import annotations
 """Модуль содержащий класс для построения URL."""
 
 
-
 class JuneURL():
     """Класс описывающий эндпоинт сайта hh.ru для поиска работы.
-    
+
         Обьект данного класа содержит свойста:
             area: регион поиска (по умолчанию ЦФО и СЗО)
             exp: опыт работы (по умолчанию от 1 до 3 лет)
-            role: специализации (по умолчанию программист/разработчик и 
+            role: специализации (по умолчанию программист/разработчик и
         системный администратор)
             schedule: график работы (удаленная работа по умолчанию)
             search_fields: поиск по ключевым словам (по умолчанию везде)
@@ -20,7 +19,6 @@ class JuneURL():
 
     """
 
-
     HH_URL = "https://russia.hh.ru/search/vacancy?<area>&\
 experience=<exp>&<roles>&schedule=<schedule>&<search_fields>&\
 text=<searching_text>&clusters=true&enable_snippets=true&\
@@ -28,7 +26,7 @@ ored_clusters=true&order_by=publication_time&hhtmFrom=vacancy_search_list.\
     "
 
     def __init__(
-        self, 
+        self,
         area="area=232&area=231",
         exp="between1And3",
         roles="professional_role=96&professional_role=113",
@@ -36,7 +34,7 @@ ored_clusters=true&order_by=publication_time&hhtmFrom=vacancy_search_list.\
         search_fields=
         ("search_field=name&search_field=company_name&search_field=description"),
         searching_text="python"
-        ):
+    ):
         self.area = area
         self.exp = exp
         self.roles = roles
@@ -49,7 +47,7 @@ ored_clusters=true&order_by=publication_time&hhtmFrom=vacancy_search_list.\
             self.__dict__[name] = ''
         else:
             self.__dict__[name] = value
-    
+
     @property
     def text_url(self):
         """Метод получения url из обьекта JuneUrl.
@@ -59,6 +57,6 @@ ored_clusters=true&order_by=publication_time&hhtmFrom=vacancy_search_list.\
         """
         url = self.HH_URL
         for parameter in self.__dict__:
-            if parameter != None:
+            if parameter is not None:
                 url = url.replace(f'<{parameter}>', self.__dict__[parameter])
         return url

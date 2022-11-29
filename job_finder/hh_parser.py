@@ -2,7 +2,6 @@ from sys import platform
 from pathlib import Path
 from time import sleep as wait
 from os import path
-from pprint import pprint as pr
 
 from selenium import webdriver as web
 from selenium.webdriver.common.by import By
@@ -15,12 +14,12 @@ CHROME_DRIVER_PATH = path.join(BASE_DIR, PLATFORMS_DRIVER.get(platform))
 
 options = web.ChromeOptions()
 
-#options.add_argument('--headless')
+options.add_argument('--headless')
 options.add_argument('--desable-blink-features=AutomationControlled')
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 
-    
+
 def pars_hh():
     """Функция парсинга сайта hh.
 
@@ -35,7 +34,9 @@ def pars_hh():
     url = JuneURL()
     driver.get(url.text_url)
     wait(5)
-    result_header = driver.find_element(By.CLASS_NAME, 'bloko-header-section-3')
+    result_header = driver.find_element(
+        By.CLASS_NAME, 'bloko-header-section-3'
+    )
     if 'ничего не найдено' in result_header.text.lower():
         return None
     vacancy_block = driver.find_element(By.CLASS_NAME, 'vacancy-serp-content')
@@ -60,7 +61,7 @@ def _remove_extra_data(text):
     text = text.strip()
     templates_for_removing = (
         'Откликнуться', 'Показать контакты', 'Будьте первыми', 'Можно из дома',
-    'Работодатель сейчас онлайн', 'Отклик без резюме'
+        'Работодатель сейчас онлайн', 'Отклик без резюме'
     )
     for template in templates_for_removing:
         text = text.replace(template, '')
