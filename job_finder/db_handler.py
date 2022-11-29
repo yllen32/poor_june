@@ -4,6 +4,8 @@ from sqlalchemy import Column, Integer, String, create_engine, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+from log import logger
+
 
 engine = create_engine('sqlite:///../vacancy_storage.db', echo=True)
 Base = declarative_base()
@@ -44,9 +46,14 @@ def add_vacancys(items):
         session.close()
         return messages
     session.close()
+    logger.info('Нет новых вакансий')
     return None
 
 
 if __name__ == '__main__':
     # создаем бд (sqlite) если она не существует
-    Base.metadata.create_all(engine)
+    try:
+        Base.metadata.create_all(engine)
+        logger.info('База данных создана')
+    except Exception as error:
+        logger.critical(f'Не удалось создать баззу данных:\n{error}')

@@ -3,6 +3,8 @@ import os
 from dotenv import load_dotenv
 from telegram import Bot
 
+from log import logger
+
 load_dotenv()
 
 TOKEN = str(os.getenv('TOKEN'))
@@ -13,7 +15,14 @@ bot = Bot(TOKEN)
 
 def send_new_vacancy(vacancys):
     """Функция отправки свежего сообщения юзеру"""
-    if len(vacancys) > 10:
-        return print('Cлишком много вакансий')
+    quantity = len(vacancys)
+    if quantity > 10:
+        return logger.warning(f'Слишком много вакансий к отправке- {quantity}')
     for vac in vacancys[0:3]:
-        bot.send_message(USER_ID, f'{vac[0]}\n{vac[1]}')
+        try:
+            bot.send_message(USER_ID, f'{vac[0]}\n{vac[1]}')
+            logger.info(
+                f'Отправлены сообщения с вакансиями в колличестве - {quantity}'
+            )
+        except Exception as err:
+            logger.critical(f'Ошибка при отправке - {err}')
