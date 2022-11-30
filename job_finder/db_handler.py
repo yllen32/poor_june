@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from log import logger
 
 
-engine = create_engine('sqlite:///../vacancy_storage.db', echo=True)
+engine = create_engine('sqlite:///../vacancy_storage.db', echo=False)
 Base = declarative_base()
 
 
@@ -18,7 +18,7 @@ class Vacancy(Base):
     url = Column(String)
     description = Column(String)
     reading_date = Column(Date, default=date.today)
-    
+
     def __init__(self, url, description):
         self.url = url
         self.description = description
