@@ -6,7 +6,7 @@ from os import path
 from selenium import webdriver as web
 from selenium.webdriver.common.by import By
 
-from url_builder import JuneURL
+from url_builder import JuneURL, create_params_from_settings
 
 PLATFORMS_DRIVER = {"win32": "chromedriver.exe", "linux": "chromedriver_linux"}
 BASE_DIR = Path(__file__).resolve().parent
@@ -31,7 +31,8 @@ def pars_hh():
                 }
     """
     driver = web.Chrome(executable_path=CHROME_DRIVER_PATH, options=options)
-    url = JuneURL()
+    params = create_params_from_settings()
+    url = JuneURL(*params)
     driver.get(url.text_url)
     wait(5)
     result_header = driver.find_element(

@@ -1,16 +1,19 @@
-import logging
+
 from logging.handlers import RotatingFileHandler
 
 from loguru import logger
 
-handler = RotatingFileHandler('debug.log', maxBytes=50000000, backupCount=5)
+from settings import DEBUG_LOG
 
-program_log = logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s, %(levelname)s, %(message)s, %(name)s',
-    handlers=(handler,)
-)
 
+if DEBUG_LOG:
+    import logging
+    handler = RotatingFileHandler('debug.log', maxBytes=50000000, backupCount=5)
+    program_log = logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)s, %(levelname)s, %(message)s, %(name)s',
+        handlers=(handler,)
+    )
 
 logger.add(
     "job_finder.log",

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 """Модуль содержащий класс для построения URL."""
 
+import settings as set
+
 
 class JuneURL():
     """Класс описывающий эндпоинт сайта hh.ru для поиска работы.
@@ -14,9 +16,6 @@ class JuneURL():
             schedule: график работы (удаленная работа по умолчанию)
             search_fields: поиск по ключевым словам (по умолчанию везде)
             searching_text: текст поиска (по умолчанию "python")
-
-        Подробную информацию как настроить поиск смотри в README
-
     """
 
     HH_URL = "https://russia.hh.ru/search/vacancy?<area>&\
@@ -60,3 +59,30 @@ ored_clusters=true&order_by=publication_time&hhtmFrom=vacancy_search_list.\
             if parameter is not None:
                 url = url.replace(f'<{parameter}>', self.__dict__[parameter])
         return url
+
+def create_params_from_settings():
+    """Функция создание параметров для url собирает значения из settings, и 
+    преобразует данные из человекопонятных в параметры поиска сайта hh.
+        например  зона поиска ЦФО: area=232
+    """
+    temps = set.SEARCHING_TEMPLATES
+    areas =  _full_fill_param(set.AREA, temps['area'])
+    if len(set.EXPIRIANCE)>1:
+        exp = temps['expiriance']['нет опыта']
+    else:
+        exp = temps['expiriance'][set.EXPIRIANCE[0].lower()]
+    roles = _full_fill_param(set.POSITIONS, temps['roles'])
+    schedule = _full_fill_param(set.SCHEDULE, temps['schedule'])
+    return areas, exp, roles, schedule
+
+
+def _full_fill_param(set, temps):
+    """
+    Функция соединеня параметров для поиска, добавляет & между параметрами.
+    """
+    param = ''
+    for item in set:
+        param += temps[item.lower()]
+        if item != set[-1]:
+            param += '&'
+    return param
