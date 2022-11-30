@@ -21,8 +21,8 @@ def send_new_vacancy(vacancys):
     for vac in vacancys[0:3]:
         try:
             bot.send_message(USER_ID, f'{vac[0]}\n{vac[1]}')
-            logger.info(
-                f'Отправлены сообщения с вакансиями в колличестве - {quantity}'
-            )
         except Exception as err:
             logger.critical(f'Ошибка при отправке - {err}')
+    logger.info(
+                f'Отправлены сообщения с вакансиями в колличестве - {quantity}'
+            )
