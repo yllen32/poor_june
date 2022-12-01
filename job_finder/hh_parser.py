@@ -33,9 +33,8 @@ def pars_hh():
     driver = web.Chrome(executable_path=CHROME_DRIVER_PATH, options=options)
     params = create_params_from_settings()
     url = JuneURL(*params)
-    print(url.text_url)
     driver.get(url.text_url)
-    wait(40)
+    wait(5)
     result_header = driver.find_element(
         By.CLASS_NAME, 'bloko-header-section-3'
     )
