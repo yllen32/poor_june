@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Модуль содержащий класс для построения URL."""
 
 import settings as set
@@ -19,10 +17,33 @@ class JuneURL():
     """
 
     HH_URL = "https://russia.hh.ru/search/vacancy?<area>&\
-experience=<exp>&<roles>&schedule=<schedule>&<search_fields>&\
+experience=<exp>&<roles>&<schedule>&<search_fields>&\
 text=<searching_text>&clusters=true&enable_snippets=true&\
 ored_clusters=true&order_by=publication_time&hhtmFrom=vacancy_search_list.\
     "
+    SEARCHING_TEMPLATES = {
+        'area': {
+            'цфо': 'area=232',
+            'сзо': 'area=231',
+            'москва': 'area=1',
+            'казань': 'area=88',
+            'санкт-петербург': 'area=2',
+            'новосибирск': 'area=4',
+            'владивосток': 'area=22',
+        },
+        'expiriance': {  # только одна может быть в поиске
+            'нет опыта': 'noExperience',
+            'от 1 до 3 лет': 'between1And3',
+        },
+        'roles': {
+            'программист-разработчик': 'professional_role=96',
+            'cистемный администратор': 'professional_role=113',
+        },
+        'schedule': {
+            'полный день': 'schedule=fullDay',
+            'удаленная работа': 'schedule=remote'
+        }
+    }
 
     def __init__(
         self,
@@ -60,14 +81,15 @@ ored_clusters=true&order_by=publication_time&hhtmFrom=vacancy_search_list.\
                 url = url.replace(f'<{parameter}>', self.__dict__[parameter])
         return url
 
+
 def create_params_from_settings():
-    """Функция создание параметров для url собирает значения из settings, и 
+    """Функция создание параметров для url собирает значения из settings, и
     преобразует данные из человекопонятных в параметры поиска сайта hh.
         например  зона поиска ЦФО: area=232
     """
-    temps = set.SEARCHING_TEMPLATES
-    areas =  _full_fill_param(set.AREA, temps['area'])
-    if len(set.EXPIRIANCE)>1:
+    temps = JuneURL.SEARCHING_TEMPLATES
+    areas = _full_fill_param(set.AREA, temps['area'])
+    if len(set.EXPIRIANCE) > 1:
         exp = temps['expiriance']['нет опыта']
     else:
         exp = temps['expiriance'][set.EXPIRIANCE[0].lower()]

@@ -14,7 +14,7 @@ CHROME_DRIVER_PATH = path.join(BASE_DIR, PLATFORMS_DRIVER.get(platform))
 
 options = web.ChromeOptions()
 
-options.add_argument('--headless')
+#options.add_argument('--headless')
 options.add_argument('--desable-blink-features=AutomationControlled')
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
@@ -33,8 +33,9 @@ def pars_hh():
     driver = web.Chrome(executable_path=CHROME_DRIVER_PATH, options=options)
     params = create_params_from_settings()
     url = JuneURL(*params)
+    print(url.text_url)
     driver.get(url.text_url)
-    wait(5)
+    wait(40)
     result_header = driver.find_element(
         By.CLASS_NAME, 'bloko-header-section-3'
     )
