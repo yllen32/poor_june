@@ -14,7 +14,7 @@ CHROME_DRIVER_PATH = path.join(BASE_DIR, PLATFORMS_DRIVER.get(platform))
 
 options = web.ChromeOptions()
 
-#options.add_argument('--headless')
+options.add_argument('--headless')
 options.add_argument('--desable-blink-features=AutomationControlled')
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
