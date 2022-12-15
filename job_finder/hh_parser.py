@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from sys import platform
 from pathlib import Path
 from time import sleep as wait
@@ -20,11 +22,11 @@ options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 
 
-def pars_hh():
+def pars_hh(user_url=None) -> None | tuple:
     """Функция парсинга сайта hh.
 
-        Возвращает None в случае если ничего не найдено, либо 
-    словарь вида {"vacancy":{
+        Возвращает None в случае если ничего не найдено, либо коротеж с
+    словарарями вида {"vacancy":{
                     "link":<ссылка на вакансию>,
                     "description":<описание вакансии>
                     }
@@ -33,7 +35,7 @@ def pars_hh():
     driver = web.Chrome(executable_path=CHROME_DRIVER_PATH, options=options)
     params = create_params_from_settings()
     url = JuneURL(*params)
-    driver.get(url.text_url)
+    driver.get(url.text_url if not user_url else user_url)
     wait(5)
     result_header = driver.find_element(
         By.CLASS_NAME, 'bloko-header-section-3'
@@ -57,7 +59,7 @@ def pars_hh():
     return result
 
 
-def _remove_extra_data(text):
+def _remove_extra_data(text: str) -> str:
     """Функция удаления лишних строк по шаблону из описания вакансий."""
     text = text.strip()
     templates_for_removing = (
